@@ -1,9 +1,9 @@
 package cmd
 
 import (
+	"log_cache/app"
 	"log_cache/cmd/modules"
 	"log_cache/config"
-	"log_cache/workers"
 
 	"github.com/lancer-kit/armory/log"
 	"github.com/urfave/cli"
@@ -15,6 +15,7 @@ func serveCmd() cli.Command {
 		Usage:  "starts " + config.ServiceName + " workers",
 		Action: serveAction,
 	}
+
 	return serveCommand
 }
 
@@ -25,7 +26,7 @@ func serveAction(c *cli.Context) error {
 	}
 
 	logger := log.Get().WithField("app", config.ServiceName)
-	workers.InitChief(logger, cfg).Run()
+	app.InitChief(logger, cfg).Run()
 
 	return nil
 }

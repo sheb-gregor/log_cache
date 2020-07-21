@@ -14,17 +14,17 @@ const FlagConfig = "config"
 
 // Cfg main structure of the app configuration.
 type Cfg struct {
-	API                 api.Config  `yaml:"api"`
-	MetricsAPI          api.Config  `yaml:"metrics_api"`
-	Log                 log.NConfig `yaml:"log"`
-	ServicesInitTimeout int         `yaml:"services_init_timeout"`
+	API        api.Config  `yaml:"api"`
+	Monitoring api.Config  `yaml:"monitoring"`
+	Log        log.NConfig `yaml:"log"`
 }
 
 // Validate is an implementation of Validatable interface from ozzo-validation.
 func (cfg Cfg) Validate() error {
 	return validation.ValidateStruct(&cfg,
-		validation.Field(&cfg.ServicesInitTimeout, validation.Required),
 		validation.Field(&cfg.API, validation.Required),
+		validation.Field(&cfg.Monitoring, validation.Required),
+		validation.Field(&cfg.Log, validation.Required),
 	)
 }
 

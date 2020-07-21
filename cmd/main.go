@@ -1,8 +1,8 @@
 package cmd
 
 import (
+	"log_cache/app"
 	"log_cache/config"
-	"log_cache/workers"
 
 	"github.com/lancer-kit/uwe/v2"
 	"github.com/urfave/cli"
@@ -12,7 +12,7 @@ func GetCommands() []cli.Command {
 	return []cli.Command{
 		serveCmd(),
 		uwe.CliCheckCommand(config.AppInfo(), func(_ *cli.Context) []uwe.WorkerName {
-			return []uwe.WorkerName{workers.APIServer}
+			return []uwe.WorkerName{app.APIServer, app.MonitoringServer}
 		}),
 	}
 }

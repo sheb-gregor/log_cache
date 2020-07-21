@@ -1,16 +1,17 @@
-package workers
+package app
 
 import (
-	"log_cache/models"
+	"log_cache/app/api"
+	"log_cache/config"
 
 	"github.com/lancer-kit/uwe/v2"
 	"github.com/sirupsen/logrus"
-
-	"log_cache/config"
-	"log_cache/workers/api"
 )
 
-const APIServer = "api_server"
+const (
+	APIServer        = "api_server"
+	MonitoringServer = "monitoring_server"
+)
 
 func InitChief(logger *logrus.Entry, cfg *config.Cfg) uwe.Chief {
 	logger = logger.WithField("app_layer", "workers")
@@ -20,9 +21,8 @@ func InitChief(logger *logrus.Entry, cfg *config.Cfg) uwe.Chief {
 	chief.EnableServiceSocket(config.AppInfo())
 	chief.SetEventHandler(uwe.LogrusEventHandler(logger))
 
-	eventBus := make(chan models.Event, 16)
-	chief.AddWorker(APIServer,
-		api.GetServer(cfg, logger.WithField("worker", APIServer), eventBus))
+	chief.AddWorker(APIServer, api.GetServer(cfg, logger.WithField("worker", APIServer)))
+	chief.AddWorker(MonitoringServer, api.GetMonitoringServer(cfg.Monitoring))
 
 	return chief
 }
