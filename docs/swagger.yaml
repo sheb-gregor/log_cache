@@ -1,10 +1,10 @@
 swagger: '2.0'
 info:
   version: '0.1'
-  title: Scaffold Servise
-  description: 'Base for other projects'
+  title: Log Cache
+  description: 'Simple service that holds stats of unique IP addresses'
 
-host: localhost:2490
+host: localhost:5000
 
 schemes:
   - http
@@ -29,16 +29,31 @@ paths:
           description: 'Service info'
           schema:
             $ref: '#/definitions/Health'
+  /logs:
+    post:
+      summary: "Save new log entry record"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "log entry is JSON format"
+          required: true
+          schema:
+            $ref: "#/definitions/LogEntry"
+      responses:
+        200:
+          description: "Ok"
+        "401":
+          description: "Invalid input"
 
-parameters:
-  MID:
-    name: mId
-    type: string
-    in: path
-    required: true
-    description: 'Param for middleware'
 
 definitions:
+  LogEntry:
+    additionalProperties:
+      type: string
   Health:
     properties:
       app:
