@@ -1,0 +1,64 @@
+swagger: '2.0'
+info:
+  version: '0.1'
+  title: Scaffold Servise
+  description: 'Base for other projects'
+
+host: localhost:2490
+
+schemes:
+  - http
+
+basePath: /
+
+produces:
+  - application/json
+
+consumes:
+  - application/json
+
+paths:
+  /status:
+    get:
+      summary: Get status
+      description: 'Returns info about service'
+      tags:
+        - Health-Check
+      responses:
+        200:
+          description: 'Service info'
+          schema:
+            $ref: '#/definitions/Health'
+
+parameters:
+  MID:
+    name: mId
+    type: string
+    in: path
+    required: true
+    description: 'Param for middleware'
+
+definitions:
+  Health:
+    properties:
+      app:
+        type: string
+        description: app name
+      version:
+        type: string
+        description: app version
+      tag:
+        type: string
+        description: app tag
+      build:
+        type: string
+        description: app build
+
+responses:
+  NotFoundError:
+    examples:
+      bad_body:
+        "errcode": 404
+        "message": "Not Found"
+    description: "Can't found resource"
+

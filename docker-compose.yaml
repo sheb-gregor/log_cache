@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  log_cache:
+    image: log_cache
+    #    build:
+    #      dockerfile: Dockerfile
+    #      context: ./
+    env_file:
+      - ./env/local.env
+    #    volumes:
+    #      - './env/local.config.yaml:/config.yaml'
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+      - couchdb
+      - nats
+    healthcheck:
+      test: ["CMD", "./app", "check"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      scaffold:
+
+networks:
+  scaffold: {}
