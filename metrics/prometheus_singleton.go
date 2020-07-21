@@ -10,7 +10,7 @@ type Collector struct {
 	counters map[MKey]prometheus.Counter
 }
 
-const CounterIPAddr MKey = "unique_ip_addresses"
+const CounterUniqueIP MKey = "unique_ip_addresses"
 
 var (
 	enabled   bool      // nolint:gochecknoglobals
@@ -23,7 +23,7 @@ func Init() {
 		counters: map[MKey]prometheus.Counter{},
 	}
 
-	for _, name := range []MKey{CounterIPAddr} {
+	for _, name := range []MKey{CounterUniqueIP} {
 		counter := prometheus.NewCounter(
 			prometheus.CounterOpts{
 				Name:        string(name),

@@ -16,7 +16,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func GetServer(cfg *config.Cfg, logger *logrus.Entry) *api.Server {
+func NewLogsServer(cfg *config.Cfg, ipBus chan<- string, logger *logrus.Entry) *api.Server {
 	mux := chi.NewRouter()
 
 	// A good base middleware stack
@@ -45,6 +45,12 @@ func GetServer(cfg *config.Cfg, logger *logrus.Entry) *api.Server {
 		r.Get("/status", func(w http.ResponseWriter, r *http.Request) {
 			render.Success(w, config.AppInfo())
 		})
+
+		r.Post("/logs", func(w http.ResponseWriter, r *http.Request) {
+			// todo
+			ipBus <- "todo: change me"
+		})
+
 	})
 
 	mux.NotFound(func(w http.ResponseWriter, r *http.Request) {
@@ -54,7 +60,7 @@ func GetServer(cfg *config.Cfg, logger *logrus.Entry) *api.Server {
 	return api.NewServer(cfg.API, mux)
 }
 
-func GetMonitoringServer(cfg api.Config) *api.Server {
+func NewMonitoringServer(cfg api.Config) *api.Server {
 	mux := chi.NewRouter()
 
 	// A good base middleware stack

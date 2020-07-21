@@ -11,6 +11,7 @@ import (
 const (
 	APIServer        = "api_server"
 	MonitoringServer = "monitoring_server"
+	IPCollector      = "ip_collector"
 )
 
 func InitChief(logger *logrus.Entry, cfg *config.Cfg) uwe.Chief {
@@ -21,8 +22,13 @@ func InitChief(logger *logrus.Entry, cfg *config.Cfg) uwe.Chief {
 	chief.EnableServiceSocket(config.AppInfo())
 	chief.SetEventHandler(uwe.LogrusEventHandler(logger))
 
-	chief.AddWorker(APIServer, api.GetServer(cfg, logger.WithField("worker", APIServer)))
-	chief.AddWorker(MonitoringServer, api.GetMonitoringServer(cfg.Monitoring))
+	ipBus := make(chan string, 8)
+
+	chief.AddWorkers(map[uwe.WorkerName]uwe.Worker{
+		APIServer:        api.NewLogsServer(cfg, ipBus, logger.WithField("worker", APIServer)),
+		MonitoringServer: api.NewMonitoringServer(cfg.Monitoring),
+		IPCollector:      NewCollector(ipBus),
+	})
 
 	return chief
 }
