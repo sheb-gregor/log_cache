@@ -24,12 +24,9 @@ func (c *Collector) Run(ctx uwe.Context) error {
 	for {
 		select {
 		case <-ctx.Done():
+			c.index.Close()
 			return nil
 		case ip := <-c.ipBus:
-			if c.index.Value(ip) == 0 {
-				metrics.Inc(metrics.CounterUniqueIP)
-			}
-
 			c.index.Add(ip)
 		}
 	}

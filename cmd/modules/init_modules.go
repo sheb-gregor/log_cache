@@ -2,7 +2,6 @@ package modules
 
 import (
 	"log_cache/config"
-	"log_cache/metrics"
 
 	"github.com/pkg/errors"
 	"github.com/urfave/cli"
@@ -14,6 +13,5 @@ func Init(c *cli.Context) (*config.Cfg, error) {
 		return nil, errors.Wrap(err, "unable to read config")
 	}
 
-	metrics.Init()
 	return &cfg, nil
 }
