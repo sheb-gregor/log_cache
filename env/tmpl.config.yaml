@@ -1,10 +1,16 @@
-services_init_timeout: 15 # in seconds
-
 api:
   host: 0.0.0.0
-  port: 2490
-  dev_mode: true
+  port: 5000
+  dev_mode: false
   enable_cors: true
+  api_request_timeout: 60
+
+
+monitoring:
+  host: 0.0.0.0
+  port: 9102
+  dev_mode: false
+  enable_cors: false
   api_request_timeout: 60
 
 log:

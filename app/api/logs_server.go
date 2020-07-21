@@ -9,12 +9,16 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
+	"github.com/lancer-kit/armory/api/httpx"
 	"github.com/lancer-kit/armory/api/render"
 	"github.com/lancer-kit/armory/log"
 	"github.com/lancer-kit/uwe/v2/presets/api"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/sirupsen/logrus"
 )
+
+type LogEntry map[string]interface{}
+
+const IPKey = "ip"
 
 func NewLogsServer(cfg *config.Cfg, ipBus chan<- string, logger *logrus.Entry) *api.Server {
 	mux := chi.NewRouter()
@@ -39,16 +43,28 @@ func NewLogsServer(cfg *config.Cfg, ipBus chan<- string, logger *logrus.Entry) *
 		mux.Use(middleware.Timeout(t * time.Second))
 	}
 
-	// h := handler.NewHandler(cfg, logger, bus)
-
 	mux.Route("/", func(r chi.Router) {
 		r.Get("/status", func(w http.ResponseWriter, r *http.Request) {
 			render.Success(w, config.AppInfo())
 		})
 
 		r.Post("/logs", func(w http.ResponseWriter, r *http.Request) {
-			// todo
-			ipBus <- "todo: change me"
+			logRequest := make(LogEntry)
+
+			err := httpx.ParseJSONBody(r, &logRequest)
+			if err != nil {
+				render.BadRequest(w, err)
+				return
+			}
+
+			ip, ok := logRequest[IPKey].(string)
+			if !ok {
+				render.BadRequest(w, "log data does not contain an IP field")
+				return
+			}
+
+			ipBus <- ip
+			render.ResultSuccess.Render(w)
 		})
 
 	})
@@ -58,29 +74,6 @@ func NewLogsServer(cfg *config.Cfg, ipBus chan<- string, logger *logrus.Entry) *
 	})
 
 	return api.NewServer(cfg.API, mux)
-}
-
-func NewMonitoringServer(cfg api.Config) *api.Server {
-	mux := chi.NewRouter()
-
-	// A good base middleware stack
-	mux.Use(
-		middleware.Recoverer,
-		middleware.RequestID,
-		middleware.RealIP,
-	)
-
-	mux.Handle("/metrics", promhttp.Handler())
-
-	mux.Get("/status", func(w http.ResponseWriter, r *http.Request) {
-		render.Success(w, config.AppInfo())
-	})
-
-	mux.NotFound(func(w http.ResponseWriter, r *http.Request) {
-		render.ResultNotFound.Render(w)
-	})
-
-	return api.NewServer(cfg, mux)
 }
 
 func getCORS() *cors.Cors {

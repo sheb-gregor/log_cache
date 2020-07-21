@@ -16,8 +16,8 @@ RUN go get -v && ./build.sh /app
 # Final stage
 FROM alpine:3.7
 
-# Port 8080 belongs to our application
-EXPOSE 8080
+# Port 5000 and 9102 belongs to our application
+EXPOSE 5000 9102
 
 # Allow delve to run on Alpine based containers.
 RUN apk add --no-cache ca-certificates bash

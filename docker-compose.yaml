@@ -11,11 +11,8 @@ services:
     #    volumes:
     #      - './env/local.config.yaml:/config.yaml'
     ports:
-      - '8080:8080'
-    depends_on:
-      - postgres
-      - couchdb
-      - nats
+      - '5000:5000'
+      - '9102:9102'
     healthcheck:
       test: ["CMD", "./app", "check"]
       interval: 1m30s

@@ -1,4 +1,4 @@
-# Go Web-Service Scaffold
+# Go Web-Service
 
 This is a project example build with Lancer-Kit tool set.
 
