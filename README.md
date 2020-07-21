@@ -2,6 +2,20 @@
 
 This is a project example build with Lancer-Kit tool set.
 
+#### What service do?
+
+- Listen on ports `:5000` and `:9102`
+
+- Receive JSON logs on `:5000/logs`
+
+- Serve Prometheus metrics on `:9102/metrics`
+
+- Compute number of unique IP addresses in logs since service start
+
+- Create custom Prometheus metric "unique_ip_addresses"
+
+- Publish your result in public Git repository
+
 #### Quick start
 
 1. Clone this repo:
