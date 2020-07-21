@@ -27,7 +27,7 @@ func InitChief(logger *logrus.Entry, cfg *config.Cfg) uwe.Chief {
 	chief.AddWorkers(map[uwe.WorkerName]uwe.Worker{
 		APIServer:        api.NewLogsServer(cfg, ipBus, logger.WithField("worker", APIServer)),
 		MonitoringServer: api.NewMonitoringServer(cfg.Monitoring),
-		IPCollector:      NewCollector(ipBus),
+		IPCollector:      NewCollector(ipBus, logger.WithField("worker", IPCollector)),
 	})
 
 	return chief

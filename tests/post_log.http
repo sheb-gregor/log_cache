@@ -1,0 +1,13 @@
+###
+
+POST http://localhost:5000/logs
+Accept: */*
+Content-Type: application/json
+
+{
+  "timestamp": "2020-06-24T15:27:00.123456Z",
+  "ip": "83.150.59.150",
+  "url": "http://example.com"
+}
+
+###
